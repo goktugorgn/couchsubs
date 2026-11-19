@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -118,7 +117,7 @@ public class MainActivity extends Activity implements TvPage.Host {
 
     /** Katman açılabilir mi: bu derlemede var (Play paketinde yok) ve "Diğer uygulamaların üzerinde göster" izni verilmiş. */
     private boolean overlayAllowed() {
-        return BuildConfig.OVERLAY_MODE && Settings.canDrawOverlays(this);
+        return BuildConfig.OVERLAY_MODE && OverlayService.canDrawOverlays(this);
     }
 
     private void showInApp() {

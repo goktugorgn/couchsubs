@@ -8,7 +8,6 @@ import android.media.tv.TvInputManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,8 +33,10 @@ final class HdmiInputs {
                 inputs.add(input);
             }
         }
-        Collections.sort(inputs, Comparator.comparingLong((TvInputInfo input) -> lastNumber(input.getId()))
-                .thenComparing(TvInputInfo::getId));
+        Collections.sort(inputs, (first, second) -> {
+            int order = Long.compare(lastNumber(first.getId()), lastNumber(second.getId()));
+            return order != 0 ? order : first.getId().compareTo(second.getId());
+        });
         return inputs;
     }
 

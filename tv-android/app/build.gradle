@@ -47,6 +47,7 @@ android {
     productFlavors {
         sideload {
             dimension 'distribution'
+            minSdk 22
             buildConfigField 'boolean', 'OVERLAY_MODE', 'true'
             signingConfig releaseKeystore ? signingConfigs.release : signingConfigs.debug
         }

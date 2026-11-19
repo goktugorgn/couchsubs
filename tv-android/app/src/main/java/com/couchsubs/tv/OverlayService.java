@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 package com.couchsubs.tv;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,6 +10,7 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.graphics.PixelFormat;
 import android.media.tv.TvContract;
@@ -69,6 +71,14 @@ public class OverlayService extends Service implements TvPage.Host {
         }
     }
 
+    static boolean canDrawOverlays(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return Settings.canDrawOverlays(context);
+        }
+        return context.checkCallingOrSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
     static void stop(Context context) {
         context.stopService(new Intent(context, OverlayService.class));
     }
@@ -83,7 +93,7 @@ public class OverlayService extends Service implements TvPage.Host {
         }
         String params = intent == null ? null : intent.getStringExtra(EXTRA_PARAMS);
         if (page == null) {
-            if (!Settings.canDrawOverlays(this)) {
+            if (!canDrawOverlays(this)) {
                 // İzin geri alınmış: uygulama içi moda dönülür, iznin nasıl verileceği gösterilir.
                 stopSelf();
                 openApp(DisplayMode.FAILED_PERMISSION);
